@@ -11,3 +11,7 @@ to turn off led:
 ```
 rmmod led
 ```
+clean before do something else:
+```
+make clean
+```
