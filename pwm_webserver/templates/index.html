@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Camera Stream</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateStatus(button, state) {
+            $.post('/update_status', {button: button, state: state}, function() {
+                // Lấy trạng thái mới từ server và cập nhật giao diện người dùng
+                $.get('/status', function(data) {
+                    $('#status-forward').text('Status of Forward: ' + (data.forward ? 'True' : 'False'));
+                    $('#status-backward').text('Status of Backward: ' + (data.backward ? 'True' : 'False'));
+                    $('#status-left').text('Status of Left: ' + (data.left ? 'True' : 'False'));
+                    $('#status-right').text('Status of Right: ' + (data.right ? 'True' : 'False'));
+                });
+            });
+        }
+
+        $(document).keydown(function(e) {
+            switch(e.which) {
+                case 37: // left
+                    updateStatus('left', true);
+                    break;
+
+                case 38: // up
+                    updateStatus('forward', true);
+                    break;
+
+                case 39: // right
+                    updateStatus('right', true);
+                    break;
+
+                case 40: // down
+                    updateStatus('backward', true);
+                    break;
+
+                default: return;
+            }
+            e.preventDefault(); // prevent the default action (scroll / move caret)
+        });
+
+        $(document).keyup(function(e) {
+            switch(e.which) {
+                case 37: // left
+                    updateStatus('left', false);
+                    break;
+
+                case 38: // up
+                    updateStatus('forward', false);
+                    break;
+
+                case 39: // right
+                    updateStatus('right', false);
+                    break;
+
+                case 40: // down
+                    updateStatus('backward', false);
+                    break;
+
+                default: return;
+            }
+            e.preventDefault(); // prevent the default action (scroll / move caret)
+        });
+    </script>
+</head>
+<body>
+    <h1>Camera Stream</h1>
+    <img src="/video_feed" width="640" height="480" />
+    <p id="status-forward">Status of Forward: {{ status['forward'] }}</p>
+    <p id="status-backward">Status of Backward: {{ status['backward'] }}</p>
+    <p id="status-left">Status of Left: {{ status['left'] }}</p>
+    <p id="status-right">Status of Right: {{ status['right'] }}</p>
+</body>
+</html>

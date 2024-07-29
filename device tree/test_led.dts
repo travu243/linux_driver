@@ -1,0 +1,15 @@
+/dts-v1/;
+
+/{
+	test_led@0300B000 {
+		compatible = "test_led";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		reg = <0x0300B000 0x1000>;
+		label = "Test";
+		my_value = <12>;
+		status = "okay";
+	};
+};
+
+xunlong,orangepi-zero3\0allwinner,sun50i-h616

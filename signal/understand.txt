@@ -1,0 +1,49 @@
+mỗi process có 1 bảng signal table
+mỗi hàng của bảng chứa số hiệu signal và con trỏ hàm đến handler
+con trỏ trỏ đến signal table của process xem tại struct task struct->pending (include/linux/sched.h)
+
+Bảng signal table:
+đăng kí hàm xử lý signal  (software interrupt)
+
+gửi signal: kill command/ từ process khác/ lỗi chương trình/ tổ hợp phím đặc biệt (ctrl C, ctrl Z)
+
+ps -aux | grep (process)
+
+signal có thể ignore
+signal không thể ignore
+hoặc
+signal có thể chủ động điều khiển
+signal không thể chủ động điều khiển
+
+include signal.h		thư viện
+void sig-handler(int signo) 	//hàm xử lý signal(signo là giá trị của signal)
+sighandler_t signal(int signum, sighandler_t handler)	//đăng kí hàm xử lý signal vs os
+
+gửi signal
+int kill(pid_t pid, int signo)	//signo là macro
+
+chú ý permission của process và signal
+
+signo cơ bản:
+SIGCHILD : process con kết thúc gửi signal về process cha
+SIGILL:	khi truy cập vào vùng nhớ ko hợp lệ
+SIGINT:	khi user dùng tổ hợp phím ctrl c
+SIGKILL:	khi gửi signal terminate
+
+cách ignore:
+signal(signal_number, SIG_IGN)
+
+cách block:
+khai báo signal mask: sigset_t 
+int sigfillset(sigset-t *set)	//full 1 trong mask
+int sigemptyset(sigset_t *set)	//full 0 trong mask
+int sigaddset(sigset_t *set,int signo)	bit 1 để thao tác signal có số signo trong mask
+int sigdelset(sigset_t *set,int signo)	bit 0 để ko thao tác signal có số signo trong mask
+
+int sigprocmask(int how, const sigset_t *set, sigset_t *oldset)
+//biến how:SIG_BLOCK,SIG_UNBLOCK,SIG_SETMASK
+
+kiểm tra các signal đang bị pending
+int sigpending(signset_t *set)
+ 
+
